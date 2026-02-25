@@ -1,0 +1,54 @@
+@model Mission__8___Group_8.Models.Task
+
+@{
+    ViewData["Title"] = "Task Saved";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6 text-center">
+
+        <div class="card shadow-sm">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0">&#10003; Task Saved Successfully</h4>
+            </div>
+            <div class="card-body py-4">
+                <p class="fs-5 mb-1"><strong>@Model.TaskName</strong></p>
+
+                @if (Model.DueDate.HasValue)
+                {
+                    <p class="text-muted mb-1">Due: @Model.DueDate.Value.ToString("MMMM d, yyyy")</p>
+                }
+
+                <p class="mb-1">
+                    <span class="badge bg-dark">
+                        @switch (Model.QuadrantId)
+                        {
+                            case 1: <text>Quadrant I: Important / Urgent</text> break;
+                            case 2: <text>Quadrant II: Important / Not Urgent</text> break;
+                            case 3: <text>Quadrant III: Not Important / Urgent</text> break;
+                            case 4: <text>Quadrant IV: Not Important / Not Urgent</text> break;
+                        }
+                    </span>
+                </p>
+
+                <p class="mt-2 mb-0">
+                    Completed:
+                    <span class="badge @(Model.Completed ? "bg-success" : "bg-secondary")">
+                        @(Model.Completed ? "Yes" : "No")
+                    </span>
+                </p>
+            </div>
+            <div class="card-footer">
+                <div class="row">
+                    <div class="col">
+                        <a asp-action="Create" class="btn btn-dark w-100">Add Another Task</a>
+                    </div>
+                    <div class="col">
+                        <a asp-action="Index" class="btn btn-outline-secondary w-100">View Quadrants</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
