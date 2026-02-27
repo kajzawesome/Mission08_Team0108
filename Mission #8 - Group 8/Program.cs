@@ -1,7 +1,18 @@
+using System.Collections.Immutable;
+using Microsoft.EntityFrameworkCore;
+using Mission__8___Group_8.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+    {
+        options.UseSqlite(builder.Configuration["ConnectionStrings:TaskConnection"]);
+    });
+
+builder.Services.AddScoped<ITaskRepository, EFTaskRepository>();
 
 var app = builder.Build();
 
