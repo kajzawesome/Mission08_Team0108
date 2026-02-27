@@ -1,38 +1,59 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Mission__8___Group_8.Models;
+using SQLitePCL;
 using System.Diagnostics;
-using Task = System.Threading.Tasks.Task;
 
 namespace Mission__8___Group_8.Controllers
 {
     public class HomeController : Controller
     {
+        private ITaskRepository _context;
+
+        public HomeController(ITaskRepository context)
+        {
+            _context = context;
+        }
+
+        [HttpGet]
         public IActionResult Index()
         {
-            // task quadrant display?
-            /* var tasks1 = _context.Tasks.Where(CategoryId = 1).ToList();
-             * var tasks2 = _context.Tasks.Where(CategoryId = 2).ToList();
-             * var tasks3 = _context.Tasks.Where(CategoryId = 3).ToList();
-             * var tasks4 = _context.Tasks.Where(CategoryId = 4).ToList();
-             */
+            var tasks = _context.Tasks.ToList();
+            return View(tasks);
+        }
+
+        [HttpGet]
+        public IActionResult Create()
+        {
+            ViewBag.Categories = new SelectList(
+                _context.Categories.ToList(),
+                "CategoryId",
+                "CategoryName"
+            );
+
             return View();
         }
 
-        // GET: Home/Create 
+        [HttpPost]
         public IActionResult Create(Task response)
         {
             if (ModelState.IsValid)
             {
                 _context.Tasks.Add(response);
                 _context.SaveChanges();
-                return View("Confirmation", response);
+                return RedirectToAction("Confirmation", response);
             }
 
-            ViewBag.Categories = new SelectList(_context.Categories.ToList(), "CategoryId", "Category");
+            ViewBag.Categories = new SelectList(
+                _context.Categories.ToList(),
+                "CategoryId",
+                "CategoryName"
+            );
+
             return View(response);
         }
 
-        // GET: Home/Confirmation for Create and Update
+        [HttpPost]
         public IActionResult Confirmation()
         {
             return View(); 
@@ -48,7 +69,7 @@ namespace Mission__8___Group_8.Controllers
             }
 
             ViewBag.Categories = new SelectList(_context.Categories.ToList(), "CategoryId", "CategoryName", task.CategoryId);
-            return View();
+            return View(task);
         }
 
         [HttpPost]
@@ -60,7 +81,7 @@ namespace Mission__8___Group_8.Controllers
                 _context.SaveChanges();
                 return View("Confirmation", response);
             }
-            ViewBag.Categories = new SelectList(_context.Categories.ToList(), "CategoryId", "Category");
+            ViewBag.Categories = new SelectList(_context.Categories.ToList(), "CategoryId", "CategoryName");
             return View(response);
         }
 
@@ -74,9 +95,15 @@ namespace Mission__8___Group_8.Controllers
         }
 
         [HttpPost]
-        public IActionResult Delete(Task task) {
-            _context.Tasks.Remove(task);
-            _context.SaveChanges();
+        public IActionResult Delete(int id)
+        {
+            var task = _context.Tasks.Find(id);
+            if (task != null)
+            {
+                _context.Tasks.Remove(task);
+                _context.SaveChanges();
+            }
+
             return RedirectToAction("Index");
         }
 

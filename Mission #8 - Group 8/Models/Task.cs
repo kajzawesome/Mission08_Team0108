@@ -15,7 +15,7 @@ public class Task
     public int QuadrantId { get; set; }
     public Quadrant Quadrant { get; set; }
     
-    public int? CategoryID { get; set; }
+    public int? CategoryId { get; set; }
     public Category Category { get; set; }
 
     public bool Completed { get; set; } = false;
