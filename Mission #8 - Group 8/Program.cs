@@ -16,6 +16,33 @@ builder.Services.AddScoped<ITaskRepository, EFTaskRepository>();
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+    if (!context.Categories.Any())
+    {
+        context.Categories.AddRange(
+            new Category { CategoryName = "Home" },
+            new Category { CategoryName = "School" },
+            new Category { CategoryName = "Work" },
+            new Category { CategoryName = "Church" }
+        );
+        context.SaveChanges();
+    }
+
+    if (!context.Quadrants.Any())
+    {
+        context.Quadrants.AddRange(
+            new Quadrant { QuadrantName = "Important / Urgent" },
+            new Quadrant { QuadrantName = "Important / Not Urgent" },
+            new Quadrant { QuadrantName = "Not Important / Urgent" },
+            new Quadrant { QuadrantName = "Not Important / Not Urgent" }
+        );
+        context.SaveChanges();
+    }
+}
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {

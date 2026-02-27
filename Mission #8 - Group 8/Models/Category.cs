@@ -12,7 +12,5 @@ public class Category
     [Required]
     public string CategoryName { get; set; } = string.Empty;
     
-    public ICollection<System.Threading.Tasks.Task>? Tasks { get; set; }
-    
-    //Option should be Home, School, Work, Church while building the html
+    public ICollection<TaskItem>? Tasks { get; set; }
 }

@@ -15,10 +15,8 @@ public class TaskItem
     
     [Required]
     public int QuadrantId { get; set; }
+    public Quadrant? Quadrant { get; set; }
 
-    [Required]
-    public Quadrant Quadrant { get; set; } = null!;
-    
     public int? CategoryId { get; set; }
     public Category? Category { get; set; }
 

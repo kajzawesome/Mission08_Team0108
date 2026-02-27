@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Mission__8___Group_8.Models;
-using SQLitePCL;
 using System.Diagnostics;
 using System.Linq;
 
@@ -53,10 +52,10 @@ namespace Mission__8___Group_8.Controllers
             return View(response);
         }
 
-        [HttpPost]
-        public IActionResult Confirmation()
+        [HttpGet]
+        public IActionResult Confirmation(Models.TaskItem response)
         {
-            return View(); 
+            return View(response);
         }
 
         [HttpGet]
