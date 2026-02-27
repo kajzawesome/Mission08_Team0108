@@ -1,4 +1,4 @@
-@model Mission__8___Group_8.Models.Task
+@model Mission__8___Group_8.Models.TaskItem
 
 @{
     ViewData["Title"] = "Delete Task";
@@ -51,6 +51,7 @@
                     </dl>
 
                     <form asp-action="Delete" method="post">
+                        @Html.AntiForgeryToken()
                         <input type="hidden" asp-for="TaskId" />
                         <div class="btn-group" role="group">
                             <button type="submit" class="btn btn-danger">

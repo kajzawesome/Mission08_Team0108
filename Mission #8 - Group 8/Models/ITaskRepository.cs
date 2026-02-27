@@ -3,13 +3,14 @@ namespace Mission__8___Group_8.Models;
 //The template for data connection
 public interface ITaskRepository
 {
-    List<Task> Tasks { get; }
-    List<Category> Categories { get; }
-    List<Quadrant> Quadrants { get; }
+    List<TaskItem> GetTasks();
 
-    public void AddTask(Task tasks);
-    public void UpdateTask(Task tasks);
+    TaskItem? GetTaskById(int id);
+    List<Category> GetCategories();
+    List<Quadrant> GetQuadrants();
+
+    public void AddTask(TaskItem tasks);
+    public void UpdateTask(TaskItem tasks);
     public void DeleteTask(int id);
     public void MarkComplete (int id);
-
 }

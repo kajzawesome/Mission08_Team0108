@@ -12,7 +12,7 @@ public partial class AppDbContext: DbContext
         : base(options)
     {}
     
-    public DbSet<Task> Tasks { get; set; }
+    public DbSet<TaskItem> Tasks { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<Quadrant> Quadrants { get; set; }
 }

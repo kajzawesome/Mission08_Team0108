@@ -10,17 +10,34 @@ public class EFTaskRepository : ITaskRepository
         _context = context;
     }
 
-    public List<Task> Tasks => _context.Tasks.ToList();
-    public List<Category> Categories => _context.Categories.ToList();
-    public List<Quadrant> Quadrants => _context.Quadrants.ToList();
+    public List<TaskItem> GetTasks()
+    {
+        return _context.Tasks.ToList();
+    }
 
-    public void AddTask(Task task)
+    public TaskItem? GetTaskById(int id)
+    {
+        return _context.Tasks
+            .SingleOrDefault(x => x.TaskId == id);
+    }
+
+    public List<Category> GetCategories()
+    {
+        return _context.Categories.ToList();
+    }
+
+    public List<Quadrant> GetQuadrants()
+    {
+        return _context.Quadrants.ToList();
+    }
+
+    public void AddTask(TaskItem task)
     {
         _context.Tasks.Add(task);
         _context.SaveChanges();
     }
 
-    public void UpdateTask(Task task)
+    public void UpdateTask(TaskItem task)
     {
         _context.Tasks.Update(task);
         _context.SaveChanges();
@@ -28,18 +45,23 @@ public class EFTaskRepository : ITaskRepository
 
     public void DeleteTask(int id)
     {
-        var deleterecord = _context.Tasks
-            .Single(x => x.TaskId == id);
-        _context.Remove(deleterecord);
-        _context.SaveChanges();
+        var record = GetTaskById(id);
+        if (record != null)
+        {
+            _context.Tasks.Remove(record);
+            _context.SaveChanges();
+        }
     }
 
     public void MarkComplete(int id)
     {
-        var completed = _context.Tasks
-            .Single(x => x.TaskId == id);
-        completed.Completed = true;
-        _context.SaveChanges();
+        var task = _context.Tasks
+            .SingleOrDefault(x => x.TaskId == id);
 
+        if (task != null)
+        {
+            task.Completed = true;
+            _context.SaveChanges();
+        }
     }
 }

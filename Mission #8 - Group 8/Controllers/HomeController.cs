@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Mission__8___Group_8.Models;
 using SQLitePCL;
 using System.Diagnostics;
+using System.Linq;
 
 namespace Mission__8___Group_8.Controllers
 {
@@ -18,7 +19,7 @@ namespace Mission__8___Group_8.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            var tasks = _context.Tasks.ToList();
+            var tasks = _context.GetTasks();
             return View(tasks);
         }
 
@@ -26,7 +27,7 @@ namespace Mission__8___Group_8.Controllers
         public IActionResult Create()
         {
             ViewBag.Categories = new SelectList(
-                _context.Categories.ToList(),
+                _context.GetCategories(),
                 "CategoryId",
                 "CategoryName"
             );
@@ -35,17 +36,16 @@ namespace Mission__8___Group_8.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(Task response)
+        public IActionResult Create(Models.TaskItem response)
         {
             if (ModelState.IsValid)
             {
-                _context.Tasks.Add(response);
-                _context.SaveChanges();
+                _context.AddTask(response);
                 return RedirectToAction("Confirmation", response);
             }
 
             ViewBag.Categories = new SelectList(
-                _context.Categories.ToList(),
+                _context.GetCategories(),
                 "CategoryId",
                 "CategoryName"
             );
@@ -62,46 +62,45 @@ namespace Mission__8___Group_8.Controllers
         [HttpGet]
         public IActionResult Edit(int id)
         {
-            var task = _context.Tasks.Find(id);
+            var task = _context.GetTaskById(id);
 
             if (task == null) {
                 return NotFound();
             }
 
-            ViewBag.Categories = new SelectList(_context.Categories.ToList(), "CategoryId", "CategoryName", task.CategoryId);
+            ViewBag.Categories = new SelectList(_context.GetCategories(), "CategoryId", "CategoryName", task.CategoryId);
             return View(task);
         }
 
         [HttpPost]
-        public IActionResult Edit(Task response)
+        public IActionResult Edit(Models.TaskItem response)
         {
             if (ModelState.IsValid)
             {
-                _context.Tasks.Update(response);
-                _context.SaveChanges();
+                _context.UpdateTask(response);
                 return View("Confirmation", response);
             }
-            ViewBag.Categories = new SelectList(_context.Categories.ToList(), "CategoryId", "CategoryName");
+            ViewBag.Categories = new SelectList(_context.GetCategories(), "CategoryId", "CategoryName");
             return View(response);
         }
 
         [HttpGet]
-        public IActionResult Delete(int id) {
-            var task = _context.Tasks.Find(id);
-            if (task == null) {
+        public IActionResult Delete(int id)
+        {
+            var task = _context.GetTaskById(id);
+            if (task == null)
                 return NotFound();
-            }
+
             return View(task);
         }
 
         [HttpPost]
-        public IActionResult Delete(int id)
+        [ValidateAntiForgeryToken]
+        public IActionResult Delete(Models.TaskItem task)
         {
-            var task = _context.Tasks.Find(id);
             if (task != null)
             {
-                _context.Tasks.Remove(task);
-                _context.SaveChanges();
+                _context.DeleteTask(task.TaskId);
             }
 
             return RedirectToAction("Index");
